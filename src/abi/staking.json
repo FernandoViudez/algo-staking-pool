@@ -1,0 +1,127 @@
+{
+    "name": "staking",
+    "methods": [
+        {
+            "name": "deposit",
+            "args": [
+                {
+                    "type": "axfer",
+                    "name": "axfer"
+                },
+                {
+                    "type": "asset",
+                    "name": "asset"
+                }
+            ],
+            "returns": {
+                "type": "void"
+            },
+            "desc": "Deposit adds an amount of staked assets to the pool, increasing the\nsenders share of the rewards."
+        },
+        {
+            "name": "withdraw",
+            "args": [
+                {
+                    "type": "asset",
+                    "name": "asset"
+                },
+                {
+                    "type": "uint64",
+                    "name": "amount"
+                },
+                {
+                    "type": "account",
+                    "name": "recipient"
+                },
+                {
+                    "type": "uint64",
+                    "name": "dummy"
+                }
+            ],
+            "returns": {
+                "type": "void"
+            },
+            "desc": "Remove an amount of staked assets or reward assets from the pool."
+        },
+        {
+            "name": "deploy",
+            "args": [
+                {
+                    "type": "account",
+                    "name": "collection_creator"
+                },
+                {
+                    "type": "asset",
+                    "name": "reward"
+                },
+                {
+                    "type": "uint64",
+                    "name": "begin"
+                },
+                {
+                    "type": "uint64",
+                    "name": "end"
+                }
+            ],
+            "returns": {
+                "type": "void"
+            },
+            "desc": "Used to deploy the contract, defining assets and times."
+        },
+        {
+            "name": "init",
+            "args": [
+                {
+                    "type": "pay",
+                    "name": "pay"
+                },
+                {
+                    "type": "asset",
+                    "name": "asset"
+                }
+            ],
+            "returns": {
+                "type": "void"
+            },
+            "desc": "Initialise the newly deployed contract, funding it with a minimum\nbalance and allowing it to opt in to the request assets (can be any assets)."
+        },
+        {
+            "name": "reward",
+            "args": [
+                {
+                    "type": "axfer",
+                    "name": "rewards"
+                },
+                {
+                    "type": "uint64",
+                    "name": "fixed_rate"
+                },
+                {
+                    "type": "asset",
+                    "name": "reward"
+                }
+            ],
+            "returns": {
+                "type": "void"
+            },
+            "desc": "Primarily used to supply the initial rewards for the staking contract,\nbut can also be used to add additional rewards before the contract ends."
+        },
+        {
+            "name": "config",
+            "args": [
+                {
+                    "type": "bool",
+                    "name": "paused"
+                },
+                {
+                    "type": "account",
+                    "name": "admin"
+                }
+            ],
+            "returns": {
+                "type": "void"
+            }
+        }
+    ],
+    "networks": {}
+}

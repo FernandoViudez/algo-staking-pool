@@ -1,0 +1,11 @@
+goal app method --create -f $DEPLOYER \
+    --on-completion "NoOp" \
+    --method "deploy(account,asset,uint64,uint64)void" \
+    --arg $COLLECTION_CREATOR \
+    --arg $REWARD_ASA_ID \
+    --arg $BEGIN_TIMESTAMP \
+    --arg $END_TIMESTAMP \
+    --global-byteslices 3 --global-ints 7 \
+    --local-byteslices 1 --local-ints 3 \
+    --approval-prog pyteal_staking.teal \
+    --clear-prog pyteal_clear.teal

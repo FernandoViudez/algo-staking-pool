@@ -1,0 +1,948 @@
+#pragma version 6
+txna ApplicationArgs 0
+method "deposit(axfer,asset)void"
+==
+bnz main_l12
+txna ApplicationArgs 0
+method "withdraw(asset,uint64,account,uint64)void"
+==
+bnz main_l11
+txna ApplicationArgs 0
+method "deploy(account,asset,uint64,uint64)void"
+==
+bnz main_l10
+txna ApplicationArgs 0
+method "init(pay,asset)void"
+==
+bnz main_l9
+txna ApplicationArgs 0
+method "reward(axfer,uint64,asset)void"
+==
+bnz main_l8
+txna ApplicationArgs 0
+method "config(bool,account)void"
+==
+bnz main_l7
+err
+main_l7:
+txn OnCompletion
+int NoOp
+==
+txn ApplicationID
+int 0
+!=
+&&
+assert
+txna ApplicationArgs 1
+int 0
+int 8
+*
+getbit
+store 15
+txna ApplicationArgs 2
+int 0
+getbyte
+store 16
+load 15
+load 16
+callsub config_20
+int 1
+return
+main_l8:
+txn OnCompletion
+int NoOp
+==
+txn ApplicationID
+int 0
+!=
+&&
+txn OnCompletion
+int CloseOut
+==
+txn ApplicationID
+int 0
+!=
+&&
+||
+assert
+txna ApplicationArgs 1
+btoi
+store 13
+txna ApplicationArgs 2
+int 0
+getbyte
+store 14
+txn GroupIndex
+int 1
+-
+store 12
+load 12
+gtxns TypeEnum
+int axfer
+==
+assert
+load 12
+load 13
+load 14
+callsub reward_19
+int 1
+return
+main_l9:
+txn OnCompletion
+int NoOp
+==
+txn ApplicationID
+int 0
+!=
+&&
+assert
+txna ApplicationArgs 1
+int 0
+getbyte
+store 11
+txn GroupIndex
+int 1
+-
+store 10
+load 10
+gtxns TypeEnum
+int pay
+==
+assert
+load 10
+load 11
+callsub init_18
+int 1
+return
+main_l10:
+txn OnCompletion
+int NoOp
+==
+txn ApplicationID
+int 0
+==
+&&
+assert
+txna ApplicationArgs 1
+int 0
+getbyte
+store 6
+txna ApplicationArgs 2
+int 0
+getbyte
+store 7
+txna ApplicationArgs 3
+btoi
+store 8
+txna ApplicationArgs 4
+btoi
+store 9
+load 6
+load 7
+load 8
+load 9
+callsub deploy_17
+int 1
+return
+main_l11:
+txn OnCompletion
+int NoOp
+==
+txn OnCompletion
+int CloseOut
+==
+||
+assert
+txna ApplicationArgs 1
+int 0
+getbyte
+store 2
+txna ApplicationArgs 2
+btoi
+store 3
+txna ApplicationArgs 3
+int 0
+getbyte
+store 4
+txna ApplicationArgs 4
+btoi
+store 5
+load 2
+load 3
+load 4
+load 5
+callsub withdraw_16
+int 1
+return
+main_l12:
+txn OnCompletion
+int NoOp
+==
+txn ApplicationID
+int 0
+!=
+&&
+txn OnCompletion
+int OptIn
+==
+txn ApplicationID
+int 0
+!=
+&&
+||
+assert
+txna ApplicationArgs 1
+int 0
+getbyte
+store 1
+txn GroupIndex
+int 1
+-
+store 0
+load 0
+gtxns TypeEnum
+int axfer
+==
+assert
+load 0
+load 1
+callsub deposit_15
+int 1
+return
+
+// pow10
+pow10_0:
+store 49
+int 10
+load 49
+exp
+retsub
+
+// ascii_to_int
+asciitoint_1:
+store 50
+load 50
+int 48
+>=
+assert
+load 50
+int 57
+<=
+assert
+load 50
+int 48
+-
+retsub
+
+// int_to_ascii
+inttoascii_2:
+store 20
+byte "0123456789"
+load 20
+int 1
+extract3
+retsub
+
+// atoi
+atoi_3:
+store 48
+load 48
+len
+int 0
+>
+bnz atoi_3_l2
+int 0
+b atoi_3_l3
+atoi_3_l2:
+load 48
+int 0
+getbyte
+callsub asciitoint_1
+load 48
+len
+int 1
+-
+callsub pow10_0
+*
+load 48
+int 1
+load 48
+len
+substring3
+load 48
+swap
+callsub atoi_3
+swap
+store 48
++
+atoi_3_l3:
+retsub
+
+// itoa
+itoa_4:
+store 19
+load 19
+int 0
+==
+bnz itoa_4_l5
+load 19
+int 10
+/
+int 0
+>
+bnz itoa_4_l4
+byte ""
+itoa_4_l3:
+load 19
+int 10
+%
+callsub inttoascii_2
+concat
+b itoa_4_l6
+itoa_4_l4:
+load 19
+int 10
+/
+load 19
+swap
+callsub itoa_4
+swap
+store 19
+b itoa_4_l3
+itoa_4_l5:
+byte "0"
+itoa_4_l6:
+retsub
+
+// add_to_stake_list
+addtostakelist_5:
+store 21
+txn Sender
+global CurrentApplicationID
+byte "SL"
+app_local_get_ex
+store 23
+store 22
+byte ""
+store 24
+byte ""
+store 25
+byte ""
+store 26
+load 23
+bnz addtostakelist_5_l8
+addtostakelist_5_l1:
+load 26
+len
+int 126
+int 14
+-
+<=
+assert
+load 21
+len
+int 14
+<=
+assert
+load 21
+len
+int 14
+<
+bnz addtostakelist_5_l4
+load 21
+len
+int 14
+==
+bz addtostakelist_5_l9
+load 21
+store 25
+b addtostakelist_5_l9
+addtostakelist_5_l4:
+int 0
+store 27
+addtostakelist_5_l5:
+load 27
+int 14
+load 21
+len
+-
+<
+bnz addtostakelist_5_l7
+load 24
+load 21
+concat
+store 25
+b addtostakelist_5_l9
+addtostakelist_5_l7:
+load 24
+byte "0"
+concat
+store 24
+load 27
+int 1
++
+store 27
+b addtostakelist_5_l5
+addtostakelist_5_l8:
+txn Sender
+byte "SL"
+app_local_get
+store 26
+b addtostakelist_5_l1
+addtostakelist_5_l9:
+txn Sender
+byte "SL"
+load 26
+load 25
+concat
+app_local_put
+retsub
+
+// remove_from_list
+removefromlist_6:
+store 43
+byte ""
+store 44
+load 43
+int 0
+==
+bnz removefromlist_6_l2
+txn Sender
+byte "SL"
+app_local_get
+load 43
+int 14
+-
+int 14
+extract3
+txn Sender
+byte "SL"
+app_local_get
+load 43
+int 14
++
+txn Sender
+byte "SL"
+app_local_get
+len
+int 14
+-
+extract3
+concat
+store 44
+b removefromlist_6_l3
+removefromlist_6_l2:
+txn Sender
+byte "SL"
+app_local_get
+int 14
+txn Sender
+byte "SL"
+app_local_get
+len
+int 14
+-
+extract3
+store 44
+removefromlist_6_l3:
+txn Sender
+byte "SL"
+load 44
+app_local_put
+retsub
+
+// get_asset_idx_from_list
+getassetidxfromlist_7:
+store 45
+int 1
+store 46
+getassetidxfromlist_7_l1:
+load 46
+int 126
+<=
+bz getassetidxfromlist_7_l6
+load 46
+int 14
+%
+int 0
+==
+bnz getassetidxfromlist_7_l4
+getassetidxfromlist_7_l3:
+load 46
+int 1
++
+store 46
+b getassetidxfromlist_7_l1
+getassetidxfromlist_7_l4:
+txn Sender
+byte "SL"
+app_local_get
+load 46
+int 14
+-
+int 14
+extract3
+callsub atoi_3
+store 47
+load 47
+load 45
+==
+bz getassetidxfromlist_7_l3
+load 46
+int 14
+-
+retsub
+getassetidxfromlist_7_l6:
+int 0
+return
+
+// is_admin
+isadmin_8:
+txn Sender
+byte "A"
+app_global_get
+==
+assert
+retsub
+
+// set_admin
+setadmin_9:
+store 60
+byte "A"
+load 60
+app_global_put
+retsub
+
+// check_if_official_asa
+checkifofficialasa_10:
+store 28
+load 28
+asset_params_get AssetCreator
+store 30
+store 29
+load 29
+byte "SCC"
+app_global_get
+==
+assert
+retsub
+
+// optin_asset
+optinasset_11:
+store 63
+itxn_begin
+int axfer
+itxn_field TypeEnum
+load 63
+itxn_field XferAsset
+global CurrentApplicationAddress
+itxn_field AssetReceiver
+itxn_submit
+retsub
+
+// send_asset
+sendasset_12:
+store 53
+store 52
+store 51
+load 52
+store 54
+load 51
+txnas Assets
+byte "RA"
+app_global_get
+==
+bz sendasset_12_l4
+load 53
+txnas Accounts
+byte "AR"
+app_local_get
+store 55
+load 54
+load 55
+>
+bnz sendasset_12_l3
+sendasset_12_l2:
+load 53
+txnas Accounts
+byte "AR"
+load 53
+txnas Accounts
+byte "AR"
+app_local_get
+load 54
+-
+app_local_put
+b sendasset_12_l4
+sendasset_12_l3:
+load 55
+store 54
+b sendasset_12_l2
+sendasset_12_l4:
+itxn_begin
+int axfer
+itxn_field TypeEnum
+load 51
+txnas Assets
+itxn_field XferAsset
+load 54
+itxn_field AssetAmount
+load 53
+txnas Accounts
+itxn_field AssetReceiver
+int 0
+itxn_field Fee
+itxn_submit
+retsub
+
+// is_not_paused
+isnotpaused_13:
+byte "P"
+app_global_get
+!
+assert
+retsub
+
+// calculate_rewards
+calculaterewards_14:
+store 31
+global LatestTimestamp
+byte "BT"
+app_global_get
+<
+bnz calculaterewards_14_l12
+load 31
+byte "LU"
+app_local_get
+byte "ET"
+app_global_get
+>
+bnz calculaterewards_14_l11
+global LatestTimestamp
+byte "ET"
+app_global_get
+>
+bnz calculaterewards_14_l10
+global LatestTimestamp
+calculaterewards_14_l4:
+store 32
+load 31
+byte "LU"
+app_local_get
+byte "BT"
+app_global_get
+<
+bnz calculaterewards_14_l9
+load 31
+byte "LU"
+app_local_get
+calculaterewards_14_l6:
+store 33
+byte "ET"
+app_global_get
+byte "BT"
+app_global_get
+-
+store 34
+load 32
+load 33
+-
+store 35
+load 35
+load 34
+byte "TR"
+app_global_get
+/
+/
+store 36
+txn Sender
+byte "AS"
+app_local_get
+int 100
+*
+byte "TS"
+app_global_get
+/
+store 37
+load 37
+load 36
+*
+byte "FR"
+app_global_get
+/
+store 38
+byte "TR"
+app_global_get
+load 38
+>=
+bnz calculaterewards_14_l8
+load 31
+byte "AR"
+load 31
+byte "AR"
+app_local_get
+byte "TR"
+app_global_get
++
+app_local_put
+byte "TR"
+int 0
+app_global_put
+b calculaterewards_14_l13
+calculaterewards_14_l8:
+byte "TR"
+byte "TR"
+app_global_get
+load 38
+-
+app_global_put
+load 31
+byte "AR"
+load 31
+byte "AR"
+app_local_get
+load 38
++
+app_local_put
+b calculaterewards_14_l13
+calculaterewards_14_l9:
+byte "BT"
+app_global_get
+b calculaterewards_14_l6
+calculaterewards_14_l10:
+byte "ET"
+app_global_get
+b calculaterewards_14_l4
+calculaterewards_14_l11:
+retsub
+calculaterewards_14_l12:
+retsub
+calculaterewards_14_l13:
+load 31
+byte "LU"
+global LatestTimestamp
+app_local_put
+retsub
+
+// deposit
+deposit_15:
+store 18
+store 17
+callsub isnotpaused_13
+load 17
+gtxns TypeEnum
+int axfer
+==
+assert
+load 17
+gtxns Sender
+txn Sender
+==
+assert
+load 17
+gtxns AssetReceiver
+global CurrentApplicationAddress
+==
+assert
+load 18
+txnas Assets
+callsub checkifofficialasa_10
+load 18
+txnas Assets
+callsub itoa_4
+callsub addtostakelist_5
+txn Sender
+byte "AS"
+txn Sender
+byte "AS"
+app_local_get
+load 17
+gtxns AssetAmount
++
+app_local_put
+byte "TS"
+byte "TS"
+app_global_get
+load 17
+gtxns AssetAmount
++
+app_global_put
+txn Sender
+callsub calculaterewards_14
+int 1
+return
+
+// withdraw
+withdraw_16:
+store 42
+store 41
+store 40
+store 39
+load 42
+int 0
+==
+bz withdraw_16_l5
+callsub isnotpaused_13
+txn Sender
+callsub calculaterewards_14
+byte "RA"
+app_global_get
+load 39
+txnas Assets
+==
+!
+bnz withdraw_16_l4
+withdraw_16_l2:
+load 39
+load 40
+load 41
+callsub sendasset_12
+txn OnCompletion
+int CloseOut
+==
+bz withdraw_16_l5
+load 41
+txnas Accounts
+byte "AR"
+app_local_get
+!
+assert
+b withdraw_16_l5
+withdraw_16_l4:
+txn Sender
+byte "AS"
+txn Sender
+byte "AS"
+app_local_get
+int 1
+-
+app_local_put
+load 39
+txnas Assets
+callsub getassetidxfromlist_7
+callsub removefromlist_6
+b withdraw_16_l2
+withdraw_16_l5:
+int 1
+return
+
+// deploy
+deploy_17:
+store 59
+store 58
+store 57
+store 56
+txn ApplicationID
+!
+assert
+txn Sender
+callsub setadmin_9
+byte "RA"
+load 57
+txnas Assets
+app_global_put
+load 58
+global LatestTimestamp
+>
+assert
+byte "BT"
+load 58
+app_global_put
+load 59
+load 58
+>
+assert
+byte "ET"
+load 59
+app_global_put
+byte "SCC"
+load 56
+txnas Accounts
+app_global_put
+int 1
+return
+
+// init
+init_18:
+store 62
+store 61
+callsub isadmin_8
+load 61
+gtxns TypeEnum
+int pay
+==
+assert
+load 61
+gtxns Receiver
+global CurrentApplicationAddress
+==
+assert
+global CurrentApplicationAddress
+balance
+load 61
+gtxns Amount
++
+global MinBalance
+txn NumAssets
+int 1
++
+*
+global MinTxnFee
+txn NumAssets
+*
++
+>=
+assert
+load 62
+txnas Assets
+callsub optinasset_11
+int 1
+return
+
+// reward
+reward_19:
+store 66
+store 65
+store 64
+callsub isadmin_8
+load 64
+gtxns TypeEnum
+int axfer
+==
+assert
+load 64
+gtxns AssetReceiver
+global CurrentApplicationAddress
+==
+assert
+load 64
+gtxns XferAsset
+byte "RA"
+app_global_get
+==
+assert
+byte "TR"
+byte "TR"
+app_global_get
+load 64
+gtxns AssetAmount
++
+app_global_put
+byte "FR"
+load 65
+app_global_put
+int 1
+return
+
+// config
+config_20:
+store 68
+store 67
+callsub isadmin_8
+byte "P"
+load 67
+app_global_put
+load 68
+txnas Accounts
+callsub setadmin_9
+retsub

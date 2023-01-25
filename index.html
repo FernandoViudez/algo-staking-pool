@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Getting Started</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
+      crossorigin="anonymous"
+    />
+    <script src="https://unpkg.com/lodash@4.17.20"></script>
+  </head>
+  <body class="bg-dark">
+    <div class="row w-100 m-auto p-5">
+      <div class="row m-auto p-2 w-50">
+        <label style="color: white">Pool address</label>
+        <input class="form-control" id="app-addr" type="text" />
+      </div>
+      <div class="row m-auto p-2 w-25">
+        <label style="color: white">Pool ID</label>
+        <input class="form-control" id="app-id" type="number" />
+      </div>
+      <div class="row m-auto p-2 w-25">
+        <label style="color: white">Reward asset ID</label>
+        <input class="form-control" id="reward-asa-id" type="number" />
+      </div>
+    </div>
+
+    <div class="row m-auto w-25">
+      <button class="btn btn-primary" id="connect-wallet">
+        Connect wallet
+      </button>
+    </div>
+
+    <hr style="color: white" />
+
+    <div style="display: none" id="show-nfts" class="row m-auto w-25">
+      <button id="show-nfts" class="btn btn-primary">
+        Show available NFTs to stake
+      </button>
+    </div>
+
+    <div class="row w-50 m-auto">
+      <div class="row" style="display: none" id="nfts-to-stake">
+        <label style="color: white">Choose your NFT to stake</label>
+        <select class="form-control" id="nfts-list" multiple></select>
+      </div>
+
+      <div class="row w-100 m-2 p-2" style="display: none" id="confirm-stake">
+        <div class="col-4">
+          <label style="color: white">Amount to stake</label>
+          <input class="form-control" id="amount-to-stake" type="text" />
+        </div>
+
+        <div class="col-4">
+          <label style="color: white">Mark as first staked NFT</label>
+          <input id="first-time" type="checkbox" />
+        </div>
+
+        <div class="col-4">
+          <button class="btn btn-success" id="submit">Add stake</button>
+        </div>
+      </div>
+    </div>
+
+    <div style="display: none" class="row w-100" id="withdraw">
+      <div class="row m-auto p-2 w-25">
+        <button class="btn btn-outline-success" id="withdraw-rewards">
+          Withdraw rewards
+        </button>
+      </div>
+      <div style="border: 1px solid white">
+        <div class="row m-auto p-2 w-25">
+          <button class="btn btn-outline-warning" id="withdraw-stake">
+            Withdraw stake
+          </button>
+        </div>
+        <div class="row m-auto p-2 w-25">
+          <input
+            class="form-control"
+            placeholder="NFT to withdraw"
+            id="stake-asa-id"
+            type="text"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="row w-25 m-auto p-2 bg-light" style="border-radius: 16px">
+      <h5>Rewards in real time</h5>
+      <div>
+        <label>0 TT-RWD</label>
+      </div>
+    </div>
+
+    <script src="./bundle.js"></script>
+  </body>
+</html>
